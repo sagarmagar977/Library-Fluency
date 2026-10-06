@@ -24,6 +24,10 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
 
+plugins:
+  - search
+  - mkdocs-jupyter
+
 markdown_extensions:
   - attr_list
   - md_in_html
@@ -47,8 +51,15 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - Chapter 1 - Python Execution & Core Runtime: chapter-1.md
-  - Chapter 2 - The Python Data Model & Object Protocols: chapter-2.md
-  - Chapter 3 - Library Literacy, Inspection & Concurrency: chapter-3.md
-  - Chapter 4 - Library Composition & Architecture: chapter-4.md
-  - Chapter 5 - Codebase Dissection & Debugging: chapter-5.md
+  - Chapters:
+    - Chapter 1 - Python Execution & Core Runtime: chapter-1.md
+    - Chapter 2 - The Python Data Model & Object Protocols: chapter-2.md
+    - Chapter 3 - Library Literacy, Inspection & Concurrency: chapter-3.md
+    - Chapter 4 - Library Composition & Architecture: chapter-4.md
+    - Chapter 5 - Codebase Dissection & Debugging: chapter-5.md
+  - Labs:
+    - Lab 1 - Execution Core Runtime: 01_Python_Execution_Core_Runtime_Lab.ipynb
+    - Lab 2 - Data Model Protocols: 02_Python_Data_Model_Protocols_Lab.ipynb
+    - Lab 3 - Library Literacy: 03_Library_Literacy_Inspection_Concurrency_Lab.ipynb
+    - Lab 4 - Composition Architecture: 04_Library_Composition_Architecture_Lab.ipynb
+    - Lab 5 - Debugging System Composition: 05_Codebase_Dissection_Debugging_System_Composition_Lab.ipynb
