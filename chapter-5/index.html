@@ -1,0 +1,950 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive guide to Python execution, core runtime, and system composition.">
+      
+      
+      
+      
+        <link rel="prev" href="../chapter-4/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 5 - Codebase Dissection & Debugging - Python Personal Revision Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-5-codebase-dissection-debugging-system-composition" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Python Personal Revision Guide" class="md-header__button md-logo" aria-label="Python Personal Revision Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Python Personal Revision Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 5 - Codebase Dissection & Debugging
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Python Personal Revision Guide" class="md-nav__button md-logo" aria-label="Python Personal Revision Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Python Personal Revision Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1 - Python Execution & Core Runtime
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2 - The Python Data Model & Object Protocols
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3 - Library Literacy, Inspection & Concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4 - Library Composition & Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5 - Codebase Dissection & Debugging
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5 - Codebase Dissection & Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-5-codebase-dissection-debugging-system-composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CHAPTER 5 — CODEBASE DISSECTION, DEBUGGING &amp; SYSTEM COMPOSITION
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#51-codebase-navigation-flow-tracing-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1. Codebase Navigation &amp; Flow Tracing Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52-frame-inspection-bytecode-disassembly-dis-sys_getframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2. Frame Inspection, Bytecode &amp; Disassembly (dis, sys._getframe)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#53-advanced-debugging-profiling-memory-investigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3. Advanced Debugging, Profiling &amp; Memory Investigation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#54-unfamiliar-framework-magic-protocol-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4. Unfamiliar Framework Magic &amp; Protocol Discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#55-the-python-codebase-dissection-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5. The Python Codebase Dissection Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#56-python-rapid-recall-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6. Python Rapid-Recall Sheet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#57-source-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7. Source Index
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-5-codebase-dissection-debugging-system-composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CHAPTER 5 — CODEBASE DISSECTION, DEBUGGING &amp; SYSTEM COMPOSITION
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#51-codebase-navigation-flow-tracing-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1. Codebase Navigation &amp; Flow Tracing Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52-frame-inspection-bytecode-disassembly-dis-sys_getframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2. Frame Inspection, Bytecode &amp; Disassembly (dis, sys._getframe)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#53-advanced-debugging-profiling-memory-investigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3. Advanced Debugging, Profiling &amp; Memory Investigation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#54-unfamiliar-framework-magic-protocol-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4. Unfamiliar Framework Magic &amp; Protocol Discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#55-the-python-codebase-dissection-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5. The Python Codebase Dissection Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#56-python-rapid-recall-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6. Python Rapid-Recall Sheet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#57-source-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7. Source Index
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>Chapter 5 - Codebase Dissection & Debugging</h1>
+
+<h3 id="chapter-5-codebase-dissection-debugging-system-composition"><strong>CHAPTER 5 — CODEBASE DISSECTION, DEBUGGING &amp; SYSTEM COMPOSITION</strong></h3>
+<hr />
+<h3 id="51-codebase-navigation-flow-tracing-mechanics"><strong>5.1. Codebase Navigation &amp; Flow Tracing Mechanics</strong></h3>
+<p><strong>CONCEPT</strong><br />
+Entering an unfamiliar, large-scale Python repository requires a structured approach to trace execution call chains, data transformations, object lifecycles, configuration contexts, and framework entry points without getting lost in implementation details.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Codebase Flow Tracing Architecture:
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  +-------------------------------------------------------------------------+
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  | 1. ENTRY POINT &amp; CONFIGURATION FLOW                                    |
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  |    - Manifests: pyproject.toml, setup.py, requirements.txt            |
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  |    - Entry Points: __main__.py, CLI commands, ASGI/WSGI app factories   |
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  |    - Config: os.environ, Pydantic Settings, .env files                |
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  +-------------------------------------------------------------------------+
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                                     │
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                                     ▼
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  +-------------------------------------------------------------------------+
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  | 2. REQUEST &amp; CALL-CHAIN TRACING                                         |
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  |    - Middleware / Controllers / Web Views (FastAPI, Flask, Django)       |
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  |    - Service Layer Use Cases (Orchestration &amp; Validation)               |
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  |    - Domain Aggregate Roots (Business Logic Invariants)                 |
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  +-------------------------------------------------------------------------+
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                                     │
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                                     ▼
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  +-------------------------------------------------------------------------+
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  | 3. DATA &amp; OBJECT LIFECYCLE FLOW                                         |
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  |    - Ingress: External JSON / Query Params ──&gt; DTOs / Value Objects     |
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  |    - State Transition: Pure Domain Entities ──&gt; Domain Events           |
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  |    - Egress: Repositories / Unit of Work ──&gt; ORM Models / Database     |
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  +-------------------------------------------------------------------------+
+</span></code></pre></div>
+<p><strong>KEY TECHNICAL RULES</strong><br />
+1. <strong>Entry Point Identification</strong>:
+   - Locate repository entry points by inspecting project manifests (<code>pyproject.toml</code>, <code>setup.py</code>), <code>__main__.py</code> scripts, CLI group definitions (<code>click</code>, <code>argparse</code>), or ASGI/WSGI application factory callables (e.g., <code>create_app()</code>).
+2. <strong>Execution &amp; Call-Chain Tracing</strong>:
+   - Trace top-down from boundary handlers (web controllers, message queue consumers) into service layer handlers, then down to domain entities and persistence adapters.
+   - <strong>Alternative (Bottom-Up)</strong>: Start at the core domain entities (<code>models.py</code>) to understand business state invariants before evaluating how external frameworks invoke them.
+3. <strong>Data Flow vs. Object Flow</strong>:
+   - <strong>Data Flow</strong>: Tracks how payload dictionaries mutate across boundaries (Raw JSON \(\rightarrow\) Validation Schema \(\rightarrow\) Domain Entity \(\rightarrow\) ORM Persistence).
+   - <strong>Object Flow</strong>: Tracks dependency injection graphs and object instantiation lifecycles across transaction boundaries.
+4. <strong>Configuration &amp; Context Flow</strong>:
+   - Trace configuration loading from environment variables (<code>os.environ</code>), settings objects, or dependency injection containers to understand global runtime state initialization.</p>
+<p><strong>CHEAT-CODE RULES</strong>  </p>
+<blockquote>
+<p><strong>Trace data mutations across architectural boundaries; trace object dependencies along transaction boundaries.</strong><br />
+<strong>Understand domain state invariants before deciphering framework invocation magic.</strong></p>
+</blockquote>
+<p><strong>KEYWORD MEMORY ANCHOR</strong><br />
+<code>Entry Points → Call-Chain Tracing → Data Flow → Object Lifecycle → Boundary Mapping</code></p>
+<hr />
+<h3 id="52-frame-inspection-bytecode-disassembly-dis-sys_getframe"><strong>5.2. Frame Inspection, Bytecode &amp; Disassembly (<code>dis</code>, <code>sys._getframe</code>)</strong></h3>
+<p><strong>CONCEPT</strong><br />
+When higher-level code inspection is obscured by dynamic decorators, metaclasses, or magic methods, CPython’s execution state can be directly interrogated at the stack frame and bytecode levels.</p>
+<p><strong>KEY TECHNICAL RULES</strong><br />
+1. <strong>Low-Level Frame Interrogation (<code>sys._getframe</code>)</strong>:
+   - <code>sys._getframe(0)</code> extracts the active execution frame object (<code>PyFrameObject</code>).
+   - <code>sys._getframe(1)</code> fetches the caller’s stack frame, enabling runtime inspection of caller locals (<code>f_locals</code>), globals (<code>f_globals</code>), code object metadata (<code>f_code</code>), and instruction line numbers (<code>f_lineno</code>).
+   - Essential for building dynamic logging wrappers, assertion libraries, and framework dependency injectors without explicit parameters.
+2. <strong>Bytecode Disassembly (<code>dis</code>)</strong>:
+   - The <code>dis</code> module decompiles CPython code objects (<code>PyCodeObject</code>) into human-readable bytecode instructions.
+   - <strong>Performance Insights via Disassembly</strong>:
+     - <code>LOAD_FAST</code> (local variables) vs. <code>LOAD_GLOBAL</code> (module globals/built-ins) exposes why local variable caching improves loop speed.
+     - <code>BUILD_LIST</code> / <code>LIST_APPEND</code> opcodes illustrate why list comprehensions outperform manual <code>for</code> loops appending to an empty list.
+3. <strong>Runtime Trace Hooks (<code>sys.settrace</code>)</strong>:
+   - Registers global evaluation callbacks executed on line changes, function calls, returns, or raised exceptions. Forms the foundation of coverage tools (<code>coverage.py</code>) and custom profilers.</p>
+<p><strong>CHEAT-CODE RULES</strong>  </p>
+<blockquote>
+<p><strong><code>sys._getframe()</code> interrogates dynamic runtime stack frames; <code>dis.dis()</code> exposes CPython bytecode compilation rules.</strong><br />
+<strong>Local variables use fast array lookup (<code>LOAD_FAST</code>); globals use dictionary search (<code>LOAD_GLOBAL</code>).</strong></p>
+</blockquote>
+<hr />
+<h3 id="53-advanced-debugging-profiling-memory-investigation"><strong>5.3. Advanced Debugging, Profiling &amp; Memory Investigation</strong></h3>
+<p><strong>CONCEPT</strong><br />
+Diagnosing subtle performance degradation, memory leaks, and complex execution bugs in production systems relies on CPython’s built-in debugging, profiling, memory tracking, and zero-copy protocols.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Debugging &amp; Performance Diagnostics Decision Matrix:
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Target Problem                           Diagnostic Tool
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  ---------------------------------------  -----------------------------------------
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  1. Runtime Logic Failure / Crash        ──&gt;  pdb / breakpoint() / pdb.pm() (Post-Mortem)
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  2. Execution Bottleneck / Slowdown      ──&gt;  cProfile (Deterministic Function Profiling)
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  3. Micro-Optimization Benchmark          ──&gt;  timeit (Isolated Statement Timing)
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  4. Memory Leak / Footprint Spikes       ──&gt;  tracemalloc (Heap Allocation Snapshots)
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  5. High-Throughput Large I/O Overhead   ──&gt;  memoryview / bytearray (Zero-Copy Buffers)
+</span></code></pre></div>
+<p><strong>KEY TECHNICAL RULES</strong><br />
+1. <strong>Interactive &amp; Post-Mortem Debugging (<code>pdb</code>)</strong>:
+   - Insert <code>breakpoint()</code> (invoking <code>pdb.set_trace()</code>) to pause execution and enter an interactive CPython shell.
+   - <strong>Post-Mortem Debugging (<code>pdb.pm()</code>)</strong>: Launches <code>pdb</code> directly into the stack frame of the last unhandled exception after a crash, allowing inspection of local variables at the moment of failure.
+   - Essential commands: <code>where</code> (call stack), <code>up</code>/<code>down</code> (frame traversal), <code>step</code> (into function), <code>next</code> (over line), <code>continue</code> (resume execution).
+2. <strong>Deterministic Profiling (<code>cProfile</code> &amp; <code>profile</code>)</strong>:
+   - Measures exact call counts (<code>ncalls</code>), total execution time (<code>tottime</code>), and cumulative time spent including sub-function calls (<code>cumtime</code>).
+   - Rule: <strong>Profile before optimizing.</strong> Never optimize based on intuition; target the exact function responsible for the highest <code>cumtime</code>.
+3. <strong>Memory Tracking &amp; Allocation Profiling (<code>tracemalloc</code>)</strong>:
+   - CPython uses reference counting and cyclic garbage collection.
+   - <code>tracemalloc</code> tracks memory blocks allocated by CPython, associating allocations with specific source file lines.
+   - Taking and comparing snapshots (<code>Snapshot.compare_to()</code>) pinpoints memory leaks caused by lingering references in global caches or cyclic containers.
+4. <strong>Zero-Copy Buffer Protocol (<code>memoryview</code> &amp; <code>bytearray</code>)</strong>:
+   - <code>memoryview(obj)</code> creates a zero-copy buffer view over binary data structures (e.g., <code>bytes</code>, <code>bytearray</code>, array buffers) without copying raw memory bytes in RAM.
+   - Slicing a <code>memoryview</code> generates a new sub-view without allocating new memory, drastically improving network socket and binary disk I/O throughput.</p>
+<p><strong>CHEAT-CODE RULES</strong>  </p>
+<blockquote>
+<p><strong>Use <code>pdb.pm()</code> for post-mortem crash analysis; use <code>tracemalloc</code> snapshots to catch memory leaks.</strong><br />
+<strong><code>memoryview</code> slices buffer memory with zero byte-copying overhead.</strong></p>
+</blockquote>
+<hr />
+<h3 id="54-unfamiliar-framework-magic-protocol-discovery"><strong>5.4. Unfamiliar Framework Magic &amp; Protocol Discovery</strong></h3>
+<p><strong>CONCEPT</strong><br />
+Modern Python frameworks rely on dynamic protocols, metaclasses, decorators, and descriptor attributes. Unpacking "framework magic" requires systematic runtime interrogation.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Framework Magic Unpacking Procedure:
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  1. Interrogate Class/Object -&gt; type(obj), obj.__class__.__mro__
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  2. Inspect Bound Decorators -&gt; inspect.unwrap(func) / func.__wrapped__
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  3. Scan Attribute Descriptors -&gt; type(obj).__dict__ (Check for __get__/__set__)
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  4. Interrogate Dynamic Lookups -&gt; Check for __getattr__ / __getattribute__
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  5. Inspect Namespace Allocation -&gt; vars(obj) / obj.__dict__
+</span></code></pre></div>
+<p><strong>KEY TECHNICAL RULES</strong><br />
+1. <strong>Unwrapping Decorator Stacks (<code>__wrapped__</code>)</strong>:
+   - Decorators using <code>@functools.wraps</code> preserve original function references in the <code>__wrapped__</code> attribute.
+   - Use <code>inspect.unwrap(func)</code> to dynamically bypass all nested decorator wrappers and retrieve the raw underlying function.
+2. <strong>Discovering Hidden Descriptors &amp; Methods</strong>:
+   - Direct attribute inspection via <code>obj.attr</code> triggers descriptor <code>__get__</code> execution.
+   - Inspect <code>type(obj).__dict__</code> directly to reveal underlying descriptor instances (<code>@property</code>, <code>@classmethod</code>, custom descriptors) before evaluation.
+3. <strong>Dynamic Proxy Resolution</strong>:
+   - Frameworks (e.g., Flask <code>request</code>, SQLAlchemy lazy query sets) use <code>__getattr__</code> or <code>__getattribute__</code> to forward calls to underlying context objects.
+   - Interrogate <code>obj.__class__</code> and <code>type(obj).__getattribute__</code> to trace delegation targets.</p>
+<hr />
+<h3 id="55-the-python-codebase-dissection-algorithm"><strong>5.5. The Python Codebase Dissection Algorithm</strong></h3>
+<p><strong>CONCEPT</strong><br />
+A 12-step systematic procedure for entering, mapping, debugging, and mastering any unfamiliar Python repository.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>+-----------------------------------------------------------------------------------+
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>|                  THE PYTHON CODEBASE DISSECTION ALGORITHM                         |
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>+-----------------------------------------------------------------------------------+
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>|  1. LOCATE MANIFESTS &amp; ENTRY POINTS                                               |
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>|     Inspect pyproject.toml, setup.py, requirements.txt, __main__.py, CLI commands. |
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>|                                                                                   |
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>|  2. MAP PACKAGE ARCHITECTURE &amp; MODULES                                            |
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>|     List package directories, identify top-level imports, scan module layout.     |
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>|                                                                                   |
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>|  3. TRACE PRIMARY EXECUTION CALL-CHAIN                                            |
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>|     Follow one concrete request or command from entry point down to domain logic. |
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>|                                                                                   |
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>|  4. INSPECT CORE DOMAIN MODELS                                                    |
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>|     Identify pure Entities, Value Objects, Aggregates, and state invariants.      |
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>|                                                                                   |
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>|  5. MAP DATA &amp; OBJECT LIFECYCLE                                                   |
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>|     Trace payload transformation: Ingress JSON -&gt; DTO -&gt; Domain -&gt; Persistence.   |
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>|                                                                                   |
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>|  6. DISCOVER HIDDEN PROTOCOLS &amp; METAPROGRAMMING MAGIC                             |
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>|     Inspect metaclasses, descriptors, __init_subclass__, and decorators.           |
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>|                                                                                   |
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>|  7. AUDIT PERSISTENCE &amp; TRANSACTION BOUNDARIES                                    |
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>|     Identify Repositories, Unit of Work contexts, ORM mappings, and DB session.   |
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>|                                                                                   |
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>|  8. IDENTIFY EXTERNAL PORTS &amp; ADAPTERS                                            |
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>|     Separate core domain business logic from external HTTP/DB/I/O drivers.         |
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>|                                                                                   |
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>|  9. EXECUTE FRAME &amp; STACK INSPECTIONS                                             |
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>|     Use sys._getframe(), inspect.signature(), and dir() to verify dynamic state.   |
+</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>|                                                                                   |
+</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>| 10. PROFILE EXECUTION &amp; MEMORY FOOTPRINT                                          |
+</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>|     Run cProfile for CPU bottlenecks; run tracemalloc to audit heap allocations.  |
+</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>|                                                                                   |
+</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>| 11. VERIFY ASSUMPTIONS AGAINST SOURCE                                             |
+</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>|     Cross-examine runtime behaviors against docstrings, type annotations, and tests.|
+</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>|                                                                                   |
+</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>| 12. CONSTRUCT SYSTEM MENTAL MODEL                                                 |
+</span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>|     Synthesize architectural boundaries, data flow, and invariants into memory.   |
+</span><span id="__span-3-39"><a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>+-----------------------------------------------------------------------------------+
+</span></code></pre></div>
+<hr />
+<h3 id="56-python-rapid-recall-sheet"><strong>5.6. Python Rapid-Recall Sheet</strong></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>+------------------------+---------------------------------------------------------------------------------------+
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>| Domain / Topic         | Core Mental Model / Technical Rule                                                    |
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>+------------------------+---------------------------------------------------------------------------------------+
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>| Code Objects           | PyCodeObject = Immutable static bytecode &amp; metadata; PyFrameObject = Dynamic stack.   |
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>| Memory Model           | Variables are references bound to objects; assignment (=) never copies object state.  |
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>| Mutability             | In-place ops mutate existing object id(); immutable ops rebind variable to new id().  |
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>| LEGB Scope Rule        | Lookup order: Local -&gt; Enclosing (cells) -&gt; Global (module) -&gt; Built-in.             |
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>| Iteration Protocol     | iter(x) calls __iter__() -&gt; returns iterator; next(it) calls __next__() -&gt; StopIter.  |
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>| Generators             | Functions with yield; pause execution frames lazily across evaluation steps.          |
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>| Object Instantiation   | __new__ allocates/returns object instance; __init__ populates state and returns None. |
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>| MRO &amp; C3               | Dynamic lookup order enforcing Child First, Local Precedence, and Monotonicity.       |
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>| super()                | Delegates to the NEXT class in the dynamic runtime caller MRO sequence.               |
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>| Descriptors            | Data descriptors (__set__) override __dict__; Non-data descriptors (__get__) yield.   |
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>| Context Managers       | __enter__() setup; __exit__() cleanup; returning True in __exit__ suppresses errors.   |
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>| GIL (CPython)          | Single-threaded execution lock for bytecode; released during blocking OS I/O operations. |
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>| Concurrency Choice     | Threads = I/O-bound (GIL bounded); Processes = CPU parallel; Asyncio = Cooperative I/O.|
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>| Repositories           | Collection-like abstract storage interface decoupling domain logic from databases.   |
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>| Unit of Work (UoW)     | Context manager maintaining atomic transactional consistency across repositories.      |
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>| Frame Inspection       | sys._getframe() inspects active stack frames (f_locals, f_globals, f_code, f_back).  |
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>| Debugging &amp; Memory     | pdb.pm() for post-mortem analysis; tracemalloc compares snapshots for memory leaks.   |
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>| Zero-Copy Buffer       | memoryview slices byte buffers directly in RAM without allocating data copies.        |
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>+------------------------+---------------------------------------------------------------------------------------+
+</span></code></pre></div>
+<hr />
+<h3 id="57-source-index"><strong>5.7. Source Index</strong></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a> Topic: Python Data Model, Objects, Types, and Special Methods
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    Source: 3. Data model — Python 3.14.7 documentation &amp; bk_fluent_python_2nd_edition_free_chapter_en (1).pdf
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    Location: Chapter 1 / Data Model Overview
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    Purpose: Core blueprint defining object identity, type, mutability, and dunder protocol mechanics.
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a> Topic: Advanced Python Idioms, Metaprogramming &amp; C Extensions
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    Source: Python-Cookbook-3rd-Edition.pdf (David Beazley &amp; Brian K. Jones)
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    Location: Chapters 5, 8, 9, 11, 12, 14, 15
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    Purpose: Practical recipes covering descriptors, metaclasses, concurrency, C extensions, debugging, and I/O.
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a> Topic: Pythonic Thinking, Effective Patterns &amp; Performance
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    Source: effective-python-90-specific-ways-to-write-better-python...pdf (Brett Slatkin)
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    Location: Chapters 1, 6, 7, 8, 9
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    Purpose: Actionable rules on walrus operator, comprehensions, descriptors, concurrency, tracemalloc, and memoryview.
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a> Topic: Core Python Architecture, Protocols &amp; Standard Library
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    Source: _OceanofPDF.com_Python_Distilled_-_David_Beazley.pdf (David Beazley)
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    Location: Chapters 3, 4, 6, 7, 8
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    Purpose: Concise reference on execution control flow, generators, functions, module system, and protocols.
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a> Topic: Architecture Patterns, Domain-Driven Design &amp; Decoupling
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    Source: Architecture Patterns with Python PDF.pdf (Harry Percival &amp; Bob Gregory)
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    Location: Chapters 1–8, Appendices
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    Purpose: Reference implementation for Repository, Service Layer, Unit of Work, Aggregates, and Dependency Inversion.
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a> Topic: Pedagogy, Curriculum &amp; Codebase Dissection Curriculum
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>    Source: main prompt.pdf &amp; Python Fluency Master Generation Prompt.pdf &amp; curriculum.pdf
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>    Location: Full Guide Requirements &amp; Structural Directives
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>    Purpose: Defines the 5-chapter revision blueprint, compression rules, rapid recall sheets, and dissection algorithms.
+</span></code></pre></div>
+<hr />
+<p>🎉 <strong>Congratulations! You have completed the 5-Chapter Python Personal Revision Guide!</strong> All mental models, core protocols, library literacy concepts, architectural patterns, and debugging algorithms have been synthesized for rapid recall.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

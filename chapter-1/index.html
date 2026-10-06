@@ -1,0 +1,872 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive guide to Python execution, core runtime, and system composition.">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../chapter-2/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 1 - Python Execution & Core Runtime - Python Personal Revision Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#python-personal-revision-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Python Personal Revision Guide" class="md-header__button md-logo" aria-label="Python Personal Revision Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Python Personal Revision Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 1 - Python Execution & Core Runtime
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Python Personal Revision Guide" class="md-nav__button md-logo" aria-label="Python Personal Revision Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Python Personal Revision Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1 - Python Execution & Core Runtime
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1 - Python Execution & Core Runtime
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#python-personal-revision-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PYTHON PERSONAL REVISION GUIDE
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PYTHON PERSONAL REVISION GUIDE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chapter-1-python-execution-core-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CHAPTER 1 — PYTHON EXECUTION &amp; CORE RUNTIME
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-python-execution-model-runtime-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1. Python Execution Model &amp; Runtime Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-objects-names-references-memory-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2. Objects, Names, References &amp; Memory Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-expression-evaluation-operators-truthiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3. Expression Evaluation, Operators &amp; Truthiness
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-functions-legb-scope-resolution-closures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4. Functions, LEGB Scope Resolution &amp; Closures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-runtime-inspection-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5. Runtime Inspection Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-chapter-1-summary-rapid-recall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6. Chapter 1 Summary &amp; Rapid Recall
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2 - The Python Data Model & Object Protocols
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3 - Library Literacy, Inspection & Concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4 - Library Composition & Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5 - Codebase Dissection & Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#python-personal-revision-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PYTHON PERSONAL REVISION GUIDE
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PYTHON PERSONAL REVISION GUIDE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chapter-1-python-execution-core-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CHAPTER 1 — PYTHON EXECUTION &amp; CORE RUNTIME
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-python-execution-model-runtime-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1. Python Execution Model &amp; Runtime Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-objects-names-references-memory-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2. Objects, Names, References &amp; Memory Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-expression-evaluation-operators-truthiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3. Expression Evaluation, Operators &amp; Truthiness
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-functions-legb-scope-resolution-closures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4. Functions, LEGB Scope Resolution &amp; Closures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-runtime-inspection-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5. Runtime Inspection Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-chapter-1-summary-rapid-recall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6. Chapter 1 Summary &amp; Rapid Recall
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>Chapter 1 - Python Execution & Core Runtime</h1>
+
+<p>Yes, I have full access to <strong><code>main prompt.pdf</code></strong>. Following its architecture, I will generate the <strong>Personal Python Revision Guide</strong> sequentially—one complete chapter per response—so you can review and navigate each part before moving forward.</p>
+<hr />
+<h3 id="python-personal-revision-guide"><strong>PYTHON PERSONAL REVISION GUIDE</strong></h3>
+<h5 id="chapter-1-python-execution-core-runtime"><strong>CHAPTER 1 — PYTHON EXECUTION &amp; CORE RUNTIME</strong></h5>
+<hr />
+<h3 id="11-python-execution-model-runtime-stack"><strong>1.1. Python Execution Model &amp; Runtime Stack</strong></h3>
+<p><strong>CONCEPT</strong><br />
+CPython executes code by compiling raw source text into an Abstract Syntax Tree (AST), emitting immutable bytecode encapsulated within a code object (<code>PyCodeObject</code>), and evaluating that bytecode inside sequential execution frame objects (<code>PyFrameObject</code>).</p>
+<p><strong>KEY MECHANISM</strong><br />
+- <strong>Source → AST → Code Object (<code>PyCodeObject</code>)</strong>: Source code is compiled at definition/import time into a static <code>PyCodeObject</code>. Code objects hold immutable bytecode instructions (<code>co_code</code>), literal constants (<code>co_consts</code>), variable/attribute name tuples (<code>co_varnames</code>, <code>co_names</code>, <code>co_cellvars</code>, <code>co_freevars</code>), and position metadata. Code objects contain no runtime environment context, global namespace pointers, or variable values.
+- <strong>Code Object → Frame Object (<code>PyFrameObject</code>)</strong>: When a function or module is executed, CPython allocates a dynamic execution frame (<code>PyFrameObject</code>). The frame manages local variable storage (<code>f_locals</code>), global namespace references (<code>f_globals</code>), built-in bindings (<code>f_builtins</code>), instruction evaluation index (<code>f_lasti</code>), and a link to the caller's stack frame (<code>f_back</code>).
+- <strong>Bytecode Execution Loop</strong>: The CPython interpreter loops over bytecode units sequentially, updating <code>f_lasti</code> and pushing/popping python object references on the frame’s internal evaluation stack.</p>
+<p><strong>CHEAT-CODE RULE</strong>  </p>
+<blockquote>
+<p><strong>Code objects (<code>PyCodeObject</code>) store static bytecode and metadata; frame objects (<code>PyFrameObject</code>) manage dynamic state and variable namespaces.</strong></p>
+</blockquote>
+<p><strong>KEYWORD MEMORY ANCHOR</strong><br />
+<code>Source → AST → PyCodeObject (Static) → PyFrameObject (Dynamic) → Bytecode Evaluation Stack</code></p>
+<hr />
+<h3 id="12-objects-names-references-memory-model"><strong>1.2. Objects, Names, References &amp; Memory Model</strong></h3>
+<p><strong>CONCEPT</strong><br />
+All data in CPython is represented by objects or relations between objects. A Python variable name is never a storage location containing data; it is purely an identifier bound as a reference to an object in memory.</p>
+<p><strong>KEY TECHNICAL RULES</strong><br />
+1. <strong>Object Anatomy</strong>: Every object consists of three fundamental components:
+   - <strong>Identity (<code>id()</code>)</strong>: Immutable memory address of the object (uniquely tested via <code>is</code>).
+   - <strong>Type (<code>type()</code>)</strong>: Immutable class defining supported operations and memory layout.
+   - <strong>Value</strong>: The state stored by the object.
+2. <strong>Mutability vs. Immutability</strong>:
+   - <strong>Immutable Types</strong> (<code>int</code>, <code>float</code>, <code>str</code>, <code>tuple</code>, <code>frozenset</code>, <code>bytes</code>): Their internal value cannot be altered after creation. Operations returning a modified result generate a new object. Immutable containers (e.g., <code>tuple</code>) holding references to mutable objects can change in effective value when contained objects mutate, though the contained reference identities remain fixed.
+   - <strong>Mutable Types</strong> (<code>list</code>, <code>dict</code>, <code>set</code>, <code>bytearray</code>): Their internal value can be modified in-place without altering their object identity (<code>id()</code>).
+3. <strong>Assignment vs. Copying</strong>:
+   - <strong>Binding (<code>a = b</code>)</strong>: Binds the identifier <code>a</code> to the exact same object reference as <code>b</code> (<code>a is b</code> evaluates to <code>True</code>).
+   - <strong>Shallow Copy (<code>copy.copy()</code>, <code>list(a)</code>, <code>a.copy()</code>, <code>a[:]</code>)</strong>: Constructs a new outer container object, but populates it with references to the identical elements from the original container.
+   - <strong>Deep Copy (<code>copy.deepcopy()</code>)</strong>: Recursively constructs new objects for the container and all nested objects contained within it. It fails on objects tied to external system state (e.g., open files, sockets, generators).</p>
+<p><strong>MISCONCEPTION TRAP</strong><br />
+- <strong>WRONG MODEL</strong>: Writing <code>a = b</code> copies the data from <code>b</code> into <code>a</code>, or writing <code>x = 5</code> overwrites the integer 5 in memory.<br />
+- <strong>ACTUAL MODEL</strong>: <code>a = b</code> creates a second reference pointing to the existing object. Assigning <code>x = 5</code> binds <code>x</code> to an integer object <code>5</code>; reassigning <code>x = 6</code> unbinds <code>x</code> and rebinds it to object <code>6</code>.</p>
+<p><strong>CHEAT-CODE RULES</strong>  </p>
+<blockquote>
+<p><strong>Assignment binds a name; it never copies an object.</strong><br />
+<strong>In-place mutation alters an existing object; variable reassignment rebinds a reference.</strong></p>
+</blockquote>
+<hr />
+<h3 id="13-expression-evaluation-operators-truthiness"><strong>1.3. Expression Evaluation, Operators &amp; Truthiness</strong></h3>
+<p><strong>CONCEPT</strong><br />
+Expressions evaluate to concrete values through operator precedence and associativity rules. Augmented assignments (<code>+=</code>, <code>-=</code>) optimize mutation for mutable types while falling back to rebinding for immutable types.</p>
+<p><strong>KEY TECHNICAL RULES</strong><br />
+1. <strong>Augmented Assignment Mechanics (<code>+=</code>)</strong>:
+   - For mutable targets implementing <code>__iadd__()</code>, <code>a += b</code> invokes <code>a.__iadd__(b)</code> to mutate <code>a</code> in-place and returns <code>a</code> (<code>id(a)</code> remains constant).
+   - For immutable targets (or those lacking <code>__iadd__</code>), <code>a += b</code> falls back to <code>a = a + b</code> (<code>a.__add__(b)</code>), producing a new object and rebinding <code>a</code>.
+2. <strong>Truthiness Evaluation</strong>:
+   - Truthiness is evaluated via <code>bool(x)</code>. Python calls <code>x.__bool__()</code>; if <code>__bool__()</code> is missing, it falls back to <code>x.__len__() != 0</code>. If both are undefined, the instance defaults to <code>True</code>.
+   - <strong>Falsy Singletons &amp; Values</strong>: <code>False</code>, <code>None</code>, numerical zeroes (<code>0</code>, <code>0.0</code>, <code>0j</code>), and empty collections/sequences (<code>""</code>, <code>()</code>, <code>[]</code>, <code>{}</code>).
+3. <strong>Short-Circuit Logical Operators</strong>:
+   - <code>x or y</code>: Evaluates <code>x</code>. If <code>x</code> is truthy, returns <code>x</code> immediately without evaluating <code>y</code>. Otherwise, evaluates and returns <code>y</code>.
+   - <code>x and y</code>: Evaluates <code>x</code>. If <code>x</code> is falsy, returns <code>x</code> immediately without evaluating <code>y</code>. Otherwise, evaluates and returns <code>y</code>.
+4. <strong>Assignment Expressions (Walrus Operator <code>:=</code>)</strong>:
+   - Evaluates the expression on its right, assigns the resulting reference to the name on its left, and returns that value to the surrounding expression.
+   - Eliminates redundant function calls in conditionals/comprehensions, replaces verbose <code>while True</code> loop-and-a-half constructs, and simplifies multi-branch <code>if</code>/<code>elif</code> switch-case approximations.</p>
+<p><strong>CHEAT-CODE RULES</strong>  </p>
+<blockquote>
+<p><strong>Logical <code>and</code>/<code>or</code> return operand references, not boolean flags.</strong><br />
+<strong>The walrus operator (<code>:=</code>) assigns and evaluates in a single atomic step.</strong></p>
+</blockquote>
+<hr />
+<h3 id="14-functions-legb-scope-resolution-closures"><strong>1.4. Functions, LEGB Scope Resolution &amp; Closures</strong></h3>
+<p><strong>CONCEPT</strong><br />
+Function definition statements create callable objects containing code objects, default arguments, and namespace pointers. Variable lookup follows the static LEGB scope hierarchy.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>+-------------------------------------------------------------+
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>| BUILT-IN SCOPE (f_builtins: len, str, ValueError, etc.)     |
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>|  +--------------------------------------------------------+ |
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|  | GLOBAL SCOPE (f_globals: Module-level assignments)   | |
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>|  |  +---------------------------------------------------+  | |
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>|  |  | ENCLOSING SCOPE(S) (co_freevars / cell objects)   |  | |
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>|  |  |  +----------------------------------------------+ |  | |
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>|  |  |  | LOCAL SCOPE (f_locals: Parameters &amp; locals)| |  | |
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>|  |  |  +----------------------------------------------+ |  | |
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>|  |  +---------------------------------------------------+  | |
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>|  +--------------------------------------------------------+ |
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>+-------------------------------------------------------------+
+</span></code></pre></div>
+<p><strong>KEY TECHNICAL RULES</strong><br />
+1. <strong>LEGB Scope Resolution Order</strong>:
+   - <strong>L (Local)</strong>: Names defined/assigned inside the active function frame (<code>f_locals</code>).
+   - <strong>E (Enclosing)</strong>: Names in nested function outer scopes, resolved via cell objects (<code>co_freevars</code> / <code>co_cellvars</code>).
+   - <strong>G (Global)</strong>: Names defined at the top level of the module (<code>f_globals</code>).
+   - <strong>B (Built-in)</strong>: Predefined names in the <code>builtins</code> module (<code>f_builtins</code>).
+2. <strong>Variable Binding Rules</strong>:
+   - CPython determines whether a variable name is local or global at <strong>compile time</strong> based on code structure. Any assignment statement (<code>x = ...</code>) anywhere inside a function body marks <code>x</code> as a local variable across the entire function scope, unless explicitly declared with <code>global</code> or <code>nonlocal</code>.
+   - Accessing a variable before its local assignment line triggers an <code>UnboundLocalError</code> (subclass of <code>NameError</code>).
+   - <code>global x</code>: Forces <code>x</code> lookup and assignment directly to the module's global namespace (<code>f_globals</code>).
+   - <code>nonlocal x</code>: Forces <code>x</code> assignment to bind to the nearest enclosing function scope containing a local variable <code>x</code>, bypassing <code>f_locals</code> without entering module globals.
+3. <strong>Closure Mechanics</strong>:
+   - A closure is created when an inner function references a variable in an outer enclosing scope.
+   - The outer function creates a <strong>cell object</strong> to store the shared variable reference.
+   - The inner function's <code>__closure__</code> attribute holds a tuple of cell objects corresponding to <code>codeobject.co_freevars</code>. The actual bound value is inspected via <code>cell.cell_contents</code>.
+   - Closures bind to variable <strong>names and cell containers</strong>, not static value snapshots. Late-binding pitfalls in loops occur because all closures reference the same cell updated on each iteration.
+4. <strong>Decorators &amp; <code>functools.wraps</code></strong>:
+   - A decorator <code>@decorator</code> wrapping <code>def func(): pass</code> is syntactic sugar for <code>func = decorator(func)</code>.
+   - Using <code>@functools.wraps(func)</code> on a wrapper function copies metadata (<code>__name__</code>, <code>__doc__</code>, <code>__annotations__</code>, <code>__module__</code>) and sets <code>__wrapped__</code> to point to the original callable.</p>
+<p><strong>MISCONCEPTION TRAP</strong><br />
+- <strong>WRONG MODEL</strong>: Closures capture a snapshot of variable values at the moment the inner function is defined.<br />
+- <strong>ACTUAL MODEL</strong>: Closures store references to cell objects that point to live variable references. Evaluating the closure inspects whatever value currently resides in <code>cell.cell_contents</code>.</p>
+<p><strong>CHEAT-CODE RULES</strong>  </p>
+<blockquote>
+<p><strong>Scope is determined at compile time by syntax; name resolution occurs at runtime via LEGB.</strong><br />
+<strong>Functions are created at definition time; closures bind to enclosing cell objects dynamically.</strong></p>
+</blockquote>
+<hr />
+<h3 id="15-runtime-inspection-mechanics"><strong>1.5. Runtime Inspection Mechanics</strong></h3>
+<p><strong>CONCEPT</strong><br />
+CPython exposes internal execution state through dynamic reflection functions and stack frame inspection interfaces.</p>
+<p><strong>KEY TECHNICAL RULES</strong><br />
+- <strong><code>globals()</code></strong>: Returns the live dictionary representing the active module's global namespace (<code>frame.f_globals</code>).
+- <strong><code>locals()</code></strong>: Returns a dictionary representing current local bindings (<code>frame.f_locals</code>). Inside optimized functions, CPython copies local variable references from fast stack slots into this dict; modifying the dictionary returned by <code>locals()</code> does <strong>not</strong> update underlying local variables.
+- <strong>Frame Inspection (<code>sys._getframe()</code> / <code>inspect.currentframe()</code>)</strong>:
+  - <code>sys._getframe(0)</code> returns the current executing frame (<code>PyFrameObject</code>).
+  - <code>sys._getframe(1)</code> returns the caller's frame via <code>f_back</code>.
+  - Key frame attributes: <code>f_code</code> (code object), <code>f_locals</code> (local bindings dict), <code>f_globals</code> (global dict), <code>f_lineno</code> (current source line number), <code>f_back</code> (parent caller frame).</p>
+<hr />
+<h3 id="16-chapter-1-summary-rapid-recall"><strong>1.6. Chapter 1 Summary &amp; Rapid Recall</strong></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>+-------------------+-------------------------------------------------------------------------+
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>| Concept           | Core Mechanism / Rule                                                   |
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>+-------------------+-------------------------------------------------------------------------+
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>| PyCodeObject      | Immutable compiled bytecode &amp; static metadata (no runtime state).|
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| PyFrameObject     | Dynamic stack frame holding f_locals, f_globals, f_back, &amp; f_lasti|
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Assignment (=)    | Binds an identifier name to an object reference; never copies data|
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Mutability        | In-place modification retains id(); immutable ops return new id() |
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| LEGB Rule         | Name resolution order: Local -&gt; Enclosing -&gt; Global -&gt; Built-in   |
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| nonlocal          | Binds assignment to enclosing function cell objects, skipping local|
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Cell Objects      | Shared heap wrappers in __closure__ sustaining dynamic freevars   |
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Walrus Operator   | := assigns and evaluates in expressions, flattening nested logic  |
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>+-------------------+-------------------------------------------------------------------------+
+</span></code></pre></div>
+<hr />
+<p>🎯 <strong>Ready to continue?</strong> Say <strong>"next"</strong> or <strong>"go to Chapter 2"</strong> to proceed to <strong>Chapter 2 — The Python Data Model &amp; Object Protocols</strong> (covering the iteration protocol, generator mechanics, <code>__new__</code>/<code>__init__</code>, MRO/C3 linearization, descriptors, properties, and context managers).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
